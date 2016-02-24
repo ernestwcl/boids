@@ -10,12 +10,16 @@ import random
 # Deliberately terrible code for teaching purposes
 
 NBoids = 50
+%number of boids
 
 boids_x=[random.uniform(-450,50.0) for x in range(NBoids)]
 boids_y=[random.uniform(300.0,600.0) for x in range(NBoids)]
 boid_x_velocities=[random.uniform(0,10.0) for x in range(NBoids)]
 boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(NBoids)]
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
+
+def Too_close(xpos1,ypos1,xpos2,ypos2):
+	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 100
 
 def update_boids(boids):
 	xpositions,ypositions,xvelocities,yvelocities=boids
@@ -30,7 +34,7 @@ def update_boids(boids):
 	# Fly away from nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 < 100:
+			if Too_close(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
 				xvelocities[i]=xvelocities[i]+(xpositions[i]-xpositions[j])
 				yvelocities[i]=yvelocities[i]+(ypositions[i]-ypositions[j])
 	# Try to match speed with nearby boids
