@@ -5,6 +5,7 @@ for use as an exercise on refactoring.
 
 from matplotlib import pyplot as plt
 from matplotlib import animation
+import numpy as np
 import random
 
 # Deliberately terrible code for teaching purposes
@@ -12,10 +13,12 @@ import random
 NBoids = 50
 %number of boids
 
-boids_x=[random.uniform(-450,50.0) for x in range(NBoids)]
-boids_y=[random.uniform(300.0,600.0) for x in range(NBoids)]
-boid_x_velocities=[random.uniform(0,10.0) for x in range(NBoids)]
-boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(NBoids)]
+#np.random.random_integers(-450.0,50.0,NBoids)
+
+boids_x=np.random.random_integers(-450.0,50.0,NBoids)
+boids_y=np.random.random_integers(300.0,600.0,NBoids)
+boid_x_velocities=np.random.random_integers(0,10.0,NBoids)
+boid_y_velocities=np.random.random_integers(-20.0,20.0,NBoids)
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def too_close(xpos1,ypos1,xpos2,ypos2):
