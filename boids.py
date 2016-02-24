@@ -18,31 +18,31 @@ boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(NBoids)]
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def update_boids(boids):
-	xs,ys,xvs,yvs=boids
+	xpositions,ypositions,xvelocities,yvelocities=boids
 	# Fly towards the middle
-	Nboids = len(xs)
+	Nboids = len(xpositions)
 	for i in range(Nboids):
 		for j in range(Nboids):
-			xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/Nboids
+			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*0.01/Nboids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/Nboids
+			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*0.01/Nboids
 	# Fly away from nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-				xvs[i]=xvs[i]+(xs[i]-xs[j])
-				yvs[i]=yvs[i]+(ys[i]-ys[j])
+			if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 < 100:
+				xvelocities[i]=xvelocities[i]+(xpositions[i]-xpositions[j])
+				yvelocities[i]=yvelocities[i]+(ypositions[i]-ypositions[j])
 	# Try to match speed with nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-				xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/Nboids
-				yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/Nboids
+			if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 < 10000:
+				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*0.125/Nboids
+				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*0.125/Nboids
 	# Move according to velocities
 	for i in range(Nboids):
-		xs[i]=xs[i]+xvs[i]
-		ys[i]=ys[i]+yvs[i]
+		xpositions[i]=xpositions[i]+xvelocities[i]
+		ypositions[i]=ypositions[i]+yvelocities[i]
 
 
 figure=plt.figure()
