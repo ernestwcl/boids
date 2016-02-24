@@ -18,11 +18,11 @@ boid_x_velocities=[random.uniform(0,10.0) for x in range(NBoids)]
 boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(NBoids)]
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
-def Too_close(xpos1,ypos1,xpos2,ypos2):
+def too_close(xpos1,ypos1,xpos2,ypos2):
 #True if boids become too close
 	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 100
 	
-def Same_flock(xpos1,ypos1,xpos2,ypos2):
+def same_flock(xpos1,ypos1,xpos2,ypos2):
 #True if boids are close enough to be in the same flock
 	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000)
 	
@@ -39,13 +39,13 @@ def update_boids(boids):
 	# Fly away from nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			if Too_close(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
+			if too_close(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
 				xvelocities[i]=xvelocities[i]+(xpositions[i]-xpositions[j])
 				yvelocities[i]=yvelocities[i]+(ypositions[i]-ypositions[j])
 	# Try to match speed with nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 < 10000:
+			if same_flock(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
 				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*0.125/Nboids
 				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*0.125/Nboids
 	# Move according to velocities
