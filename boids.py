@@ -33,8 +33,6 @@ def update_boids(boids):
 	for i in range(Nboids):
 		for j in range(Nboids):
 			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*0.01/Nboids
-	for i in range(Nboids):
-		for j in range(Nboids):
 			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*0.01/Nboids
 	# Fly away from nearby boids
 	for i in range(Nboids):
