@@ -19,8 +19,13 @@ boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(NBoids)]
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def Too_close(xpos1,ypos1,xpos2,ypos2):
+#True if boids become too close
 	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 100
-
+	
+def Same_flock(xpos1,ypos1,xpos2,ypos2):
+#True if boids are close enough to be in the same flock
+	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000)
+	
 def update_boids(boids):
 	xpositions,ypositions,xvelocities,yvelocities=boids
 	# Fly towards the middle
