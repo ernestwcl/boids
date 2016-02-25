@@ -19,16 +19,37 @@ boid_x_velocities=np.random.random_integers(0,10.0,NBoids)
 boid_y_velocities=np.random.random_integers(-20.0,20.0,NBoids)
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
-def too_close(xpos1,ypos1,xpos2,ypos2):
+position_lower_limit = np.array([-450.0,300.0])
+position_upper_limit = np.array([50.0,600.0])
+velocity_lower_limit = np.array([0,-20.0])
+velocity_upper_limit = np.array([10.0,20.0])
+
+def new_flock_positions(number_boids, lower_limits, upper_limits):
+	range = upper_limits - lower_limits
+	
+	boidpositions = lower_limits[:,np.newaxis] + np.random.rand(2, NBoids)*range[:,np.newaxis]
+
+	return boidpositions
+	
+def new_flock_velocities(number_boids, lower_limits, upper_limits):
+	range = upper_limits - lower_limits
+	
+	boidvelocities = lower_limits[:,np.newaxis] + np.random.rand(2, NBoids)*range[:,np.newaxis]
+
+	return boidvelocities
+	
+	
+def too_close(xpos1,xpos2,ypos1,ypos2):
 #True if boids become too close
 	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 100
 	
-def same_flock(xpos1,ypos1,xpos2,ypos2):
+def same_flock(xpos1,xpos2,ypos1,ypos2):
 #True if boids are close enough to be in the same flock
 	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000
 	
-def update_boids(boids):
-	xpositions,ypositions,xvelocities,yvelocities=boids
+def update_boids(positions, velocities):
+	xpositions,ypositions = positions
+	xvelocities,yvelocities=boids = velocities
 	Nboids = len(xpositions)
 	FlockAttractionWeight = 0.01/NBoids
 	FlockMatchSpeedWeight = 0.125/Nboids
@@ -36,35 +57,46 @@ def update_boids(boids):
 	
 	for i in range(Nboids):
 		for j in range(Nboids):
-			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*FlockAttractionWeight
-			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*FlockAttractionWeight
+			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*0.01/NBoids#FlockAttractionWeight
+			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*0.01/NBoids#FlockAttractionWeight
 	# Fly away from nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
+			#if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 <100:
 			if too_close(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
-				print "hi"
+
 				xvelocities[i]=xvelocities[i]+(xpositions[i]-xpositions[j])
 				yvelocities[i]=yvelocities[i]+(ypositions[i]-ypositions[j])
 	# Try to match speed with nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
 			if same_flock(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
-				print "hello"
-				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*FlockMatchSpeedWeight
-				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*FlockMatchSpeedWeight
+			#if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 <100:
+
+				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*0.125/NBoids#FlockMatchSpeedWeight
+				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*0.125/NBoids#FlockMatchSpeedWeight
 	# Move according to velocities
 	for i in range(Nboids):
 		xpositions[i]=xpositions[i]+xvelocities[i]
 		ypositions[i]=ypositions[i]+yvelocities[i]
 
+		
+positions = new_flock_positions(NBoids, position_lower_limit, position_upper_limit)
+velocities = new_flock_velocities(NBoids, velocity_lower_limit, velocity_upper_limit)
 
 figure=plt.figure()
 axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
 scatter=axes.scatter(boids[0],boids[1])
 
+
+
 def animate(frame):
-   update_boids(boids)
-   scatter.set_offsets(zip(boids[0],boids[1]))
+   print "Before"
+   print positions[0]
+   update_boids(positions, velocities)
+   print "After"
+   print positions[0]
+   scatter.set_offsets(positions.transpose())
 
 
 anim = animation.FuncAnimation(figure, animate,
