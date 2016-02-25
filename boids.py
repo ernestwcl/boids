@@ -83,6 +83,23 @@ def avoid_collisions(pos1,velo1):
 	velo1 += np.sum(separations_if_too_close,1)
 	return velo1
 	
+def match_speed(pos1,velo1):
+
+	separations = pos1[:,np.newaxis,:] - pos1[:,:,np.newaxis]
+	squared_diff = np.power(separations,2)
+	squared_dist = np.sum(squared_diff,0)
+	
+	velocityseparation = velo1[:,np.newaxis,:] - velo1[:,:,np.newaxis]
+	flock_size = 10000
+	flock_formation_strength = 0.125
+	outside_flock = squared_dist > flock_size
+	
+	velocityseparation_if_close = np.copy(velocityseparation)
+	velocityseparation_if_close[0,:,:][outside_flock]=0
+	velocityseparation_if_close[1,:,:][outside_flock]=0
+	velo1 -= np.mean(velocityseparation_if_close,1)*flock_formation_strength
+	return velo1
+	
 def update_velocities(boidpos,boidvel):
 	#Fly toward the middle
 	#for i in range(NBoids):
@@ -102,18 +119,20 @@ def update_velocities(boidpos,boidvel):
 	
 	boidvel = avoid_collisions(boidpos,boidvel)
 	
-	xpos,ypos = boidpos
-	xvel,yvel = boidvel
+	#xpos,ypos = boidpos
+	#xvel,yvel = boidvel
 	# Try to match speed with nearby boids
-	for i in range(NBoids):
-		for j in range(NBoids):
-			if same_flock(xpos[j],xpos[i],ypos[j],ypos[i]):
+	#for i in range(NBoids):
+	#	for j in range(NBoids):
+	#		if same_flock(xpos[j],xpos[i],ypos[j],ypos[i]):
 
 
-				xvel[i]=xvel[i]+(xvel[j]-xvel[i])*FlockMatchSpeedWeight
-				yvel[i]=yvel[i]+(yvel[j]-yvel[i])*FlockMatchSpeedWeight
+	#			xvel[i]=xvel[i]+(xvel[j]-xvel[i])*FlockMatchSpeedWeight
+	#			yvel[i]=yvel[i]+(yvel[j]-yvel[i])*FlockMatchSpeedWeight
+	boidvel = match_speed(boidpos,boidvel)
 	
-	return xvel,yvel
+	
+	return boidvel
 
 def update_boids(positions, velocities):
 	xpositions,ypositions = positions
