@@ -4,36 +4,45 @@ import numpy as np
 import random
 
 
-class BoidFlock(Object):
-	def __init__(self, position,velocity, number, lowerposlimit, upperposlimit, lowervellimit,uppervellimit):
-		self.position = position
-		self.velocity = velocity
-		self.lowlim = lowerposlimit
-		self.uplim = upperposlimit
-		self.lowvlim = lowervellimit
-		self.upvlim = uppervellimit
+
+class BoidFlock(object):
+
+		
+
+	def __init__(self): 
+	#, position,velocity, number, lowerposlimit, upperposlimit, lowervellimit,uppervellimit
+		self.number = 50
+		self.lowlim = lowerposlimit = np.array([-450.0,300.0])
+		self.uplim = upperposlimit = np.array([50.0,600.0])
+		self.lowvlim = lowervellimit = np.array([0,-20.0])
+		self.upvlim = uppervellimit = np.array([10.0,20.0])
+
+		self.position = self.new_flock_positions()
+		self.velocity = self.new_flock_velocities()
 		
 	def new_flock_positions(self):
-	
+		NBoids = 50
 		upper_limits = self.uplim
 		lower_limits = self.lowlim
 		range = upper_limits - lower_limits
 		
-		boidpositions = lower_limits[:,np.newaxis] + np.random.rand(2, NBoids)*range[:,np.newaxis]
+		boidpositions  = lower_limits[:,np.newaxis] + np.random.rand(2, NBoids)*range[:,np.newaxis]
 
-		self.position = boidpositions
+		return boidpositions
+		#self.position = boidpositions
 		
 	def new_flock_velocities(self):
+		NBoids = 50
 		upper_limits = self.upvlim
 		lower_limits = self.lowvlim
 		range = upper_limits - lower_limits
 		
 		boidvelocities = lower_limits[:,np.newaxis] + np.random.rand(2, NBoids)*range[:,np.newaxis]
 
-		self.velocity = boidvelocities
+		return boidvelocities
+		#self.velocity = boidvelocities
 		
-	def new_flock()
-		return 0
+
 		
 	#def too_close(xpos1,xpos2,ypos1,ypos2):
 	#True if boids become too close
@@ -70,7 +79,9 @@ class BoidFlock(Object):
 	
 		pos1 = self.position
 		velo1 = self.velocity
-
+		
+		print self.position
+		
 		separations = pos1[:,np.newaxis,:] - pos1[:,:,np.newaxis]
 		squared_diff = np.power(separations,2)
 		squared_dist = np.sum(squared_diff,0)
@@ -117,13 +128,13 @@ class BoidFlock(Object):
 		xpos,ypos = self.position
 		xvel,yvel = self.velocity
 		# Try to match speed with nearby boids
-		for i in range(NBoids):
-			for j in range(NBoids):
-				if same_flock(xpos[j],xpos[i],ypos[j],ypos[i]):
+		for i in range(len(xpos)):
+			for j in range(len(xpos)):
+				if (xpos[j]-xpos[i])**2 + (ypos[j]-ypos[i])**2 < 10000:
 
 
-					xvel[i]=xvel[i]+(xvel[j]-xvel[i])*FlockMatchSpeedWeight
-					yvel[i]=yvel[i]+(yvel[j]-yvel[i])*FlockMatchSpeedWeight
+					xvel[i]=xvel[i]+(xvel[j]-xvel[i])*0.125/50
+					yvel[i]=yvel[i]+(yvel[j]-yvel[i])*0.125/50
 		#boidvel = match_speed(boidpos,boidvel)
 		
 		
@@ -134,4 +145,26 @@ class BoidFlock(Object):
 		velocities = self.update_velocities()
 
 		positions = self.update_positions()
+		
+boid = BoidFlock()
 
+
+
+figure=plt.figure()
+axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
+scatter=axes.scatter(boid.position[0],boid.position[1])
+
+
+
+def animate(frame):
+
+   boid.update_boids()
+
+   #scatter.set_offsets(boid.position.transpose())
+
+
+anim = animation.FuncAnimation(figure, animate,
+                               frames=50, interval=50)
+
+if __name__ == "__main__":
+    plt.show()
