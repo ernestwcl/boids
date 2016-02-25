@@ -69,6 +69,19 @@ def fly_to_middle(pos1,velo1):
 	return velo1
 	
 def avoid_collisions(pos1,velo1):
+
+	separations = pos1[:,np.newaxis,:] - pos1[:,:,np.newaxis]
+	squared_diff = np.power(separations,2)
+	squared_dist = np.sum(squared_diff,0)
+	proximity_condition = 100
+	#boid_proximity = squared_dist < proximity_condition
+	not_too_close = squared_dist>=proximity_condition
+	separations_if_too_close = np.copy(separations)
+	separations_if_too_close[0,:,:][not_too_close]=0
+	separations_if_too_close[1,:,:][not_too_close]=0
+	
+	velo1 += np.sum(separations_if_too_close,1)
+	return velo1
 	
 def update_velocities(boidpos,boidvel):
 	#Fly toward the middle
@@ -76,17 +89,21 @@ def update_velocities(boidpos,boidvel):
 	#	for j in range(NBoids):
 	#		xvel[i]=xvel[i]+(xpos[j]-xpos[i])*FlockAttractionWeight
 	#		yvel[i]=yvel[i]+(ypos[j]-ypos[i])*FlockAttractionWeight
+
+	boidvel = fly_to_middle(boidpos,boidvel)
+
+	# Fly away from nearby boids
+	#for i in range(NBoids):
+	#	for j in range(NBoids):
+	#		if too_close(xpos[j],xpos[i],ypos[j],ypos[i]):
+#
+#				xvel[i]=xvel[i]+(xpos[i]-xpos[j])
+#				yvel[i]=yvel[i]+(ypos[i]-ypos[j])
+	
+	boidvel = avoid_collisions(boidpos,boidvel)
+	
 	xpos,ypos = boidpos
 	xvel,yvel = boidvel
-	xvel,yvel = fly_to_middle(boidpos,boidvel)
-	# Fly away from nearby boids
-	for i in range(NBoids):
-		for j in range(NBoids):
-
-			if too_close(xpos[j],xpos[i],ypos[j],ypos[i]):
-
-				xvel[i]=xvel[i]+(xpos[i]-xpos[j])
-				yvel[i]=yvel[i]+(ypos[i]-ypos[j])
 	# Try to match speed with nearby boids
 	for i in range(NBoids):
 		for j in range(NBoids):
