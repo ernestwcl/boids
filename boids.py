@@ -58,12 +58,27 @@ def update_positions(xpos,ypos,xvel,yvel):
 	return xpos, ypos
 	
 	
-def update_velocities(xpos,ypos,xvel,yvel):
+def fly_to_middle(pos1,velo1):
+
+	
+	flockcenter = np.mean(pos1,1)
+	direction_to_center = pos1 - flockcenter[:,np.newaxis]
+	strength = 0.01
+	velo1 -= (direction_to_center*strength)
+
+	return velo1
+	
+def avoid_collisions(pos1,velo1):
+	
+def update_velocities(boidpos,boidvel):
 	#Fly toward the middle
-	for i in range(NBoids):
-		for j in range(NBoids):
-			xvel[i]=xvel[i]+(xpos[j]-xpos[i])*FlockAttractionWeight
-			yvel[i]=yvel[i]+(ypos[j]-ypos[i])*FlockAttractionWeight
+	#for i in range(NBoids):
+	#	for j in range(NBoids):
+	#		xvel[i]=xvel[i]+(xpos[j]-xpos[i])*FlockAttractionWeight
+	#		yvel[i]=yvel[i]+(ypos[j]-ypos[i])*FlockAttractionWeight
+	xpos,ypos = boidpos
+	xvel,yvel = boidvel
+	xvel,yvel = fly_to_middle(boidpos,boidvel)
 	# Fly away from nearby boids
 	for i in range(NBoids):
 		for j in range(NBoids):
@@ -87,7 +102,7 @@ def update_boids(positions, velocities):
 	xpositions,ypositions = positions
 	xvelocities,yvelocities=boids = velocities
 
-	velocities = update_velocities(xpositions,ypositions,xvelocities,yvelocities)
+	velocities = update_velocities(positions,velocities)
 
 	positions = update_positions(xpositions,ypositions,xvelocities,yvelocities)
 
