@@ -13,6 +13,10 @@ import random
 NBoids = 50
 #number of boids
 
+FlockAttractionWeight = 0.01/NBoids
+FlockMatchSpeedWeight = 0.125/NBoids
+#flock behaviour weights
+
 boids_x=np.random.random_integers(-450.0,50.0,NBoids)
 boids_y=np.random.random_integers(300.0,600.0,NBoids)
 boid_x_velocities=np.random.random_integers(0,10.0,NBoids)
@@ -53,38 +57,38 @@ def update_positions(xpos,ypos,xvel,yvel):
 		ypos[i]=ypos[i]+yvel[i]
 	return xpos, ypos
 	
+	
+def update_velocities(xpos,ypos,xvel,yvel):
+	#Fly toward the middle
+	for i in range(NBoids):
+		for j in range(NBoids):
+			xvel[i]=xvel[i]+(xpos[j]-xpos[i])*FlockAttractionWeight
+			yvel[i]=yvel[i]+(ypos[j]-ypos[i])*FlockAttractionWeight
+	# Fly away from nearby boids
+	for i in range(NBoids):
+		for j in range(NBoids):
+
+			if too_close(xpos[j],xpos[i],ypos[j],ypos[i]):
+
+				xvel[i]=xvel[i]+(xpos[i]-xpos[j])
+				yvel[i]=yvel[i]+(ypos[i]-ypos[j])
+	# Try to match speed with nearby boids
+	for i in range(NBoids):
+		for j in range(NBoids):
+			if same_flock(xpos[j],xpos[i],ypos[j],ypos[i]):
+
+
+				xvel[i]=xvel[i]+(xvel[j]-xvel[i])*FlockMatchSpeedWeight
+				yvel[i]=yvel[i]+(yvel[j]-yvel[i])*FlockMatchSpeedWeight
+	
+	return xvel,yvel
+
 def update_boids(positions, velocities):
 	xpositions,ypositions = positions
 	xvelocities,yvelocities=boids = velocities
-	Nboids = len(xpositions)
-	FlockAttractionWeight = 0.01/NBoids
-	FlockMatchSpeedWeight = 0.125/Nboids
-	# Fly towards the middle
-	
-	for i in range(Nboids):
-		for j in range(Nboids):
-			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*FlockAttractionWeight
-			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*FlockAttractionWeight
-	# Fly away from nearby boids
-	for i in range(Nboids):
-		for j in range(Nboids):
-			#if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 <100:
-			if too_close(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
 
-				xvelocities[i]=xvelocities[i]+(xpositions[i]-xpositions[j])
-				yvelocities[i]=yvelocities[i]+(ypositions[i]-ypositions[j])
-	# Try to match speed with nearby boids
-	for i in range(Nboids):
-		for j in range(Nboids):
-			if same_flock(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
-			#if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 <100:
+	velocities = update_velocities(xpositions,ypositions,xvelocities,yvelocities)
 
-				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*FlockMatchSpeedWeight
-				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*FlockMatchSpeedWeight
-	# Move according to velocities
-	#for i in range(Nboids):
-	#	xpositions[i]=xpositions[i]+xvelocities[i]
-	#	ypositions[i]=ypositions[i]+yvelocities[i]
 	positions = update_positions(xpositions,ypositions,xvelocities,yvelocities)
 
 		
