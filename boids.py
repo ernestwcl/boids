@@ -29,10 +29,11 @@ def same_flock(xpos1,ypos1,xpos2,ypos2):
 	
 def update_boids(boids):
 	xpositions,ypositions,xvelocities,yvelocities=boids
-	FlockAttractionWeight = 
 	Nboids = len(xpositions)
-	# Fly towards the middle
 	FlockAttractionWeight = 0.01/NBoids
+	FlockMatchSpeedWeight = 0.125/Nboids
+	# Fly towards the middle
+	
 	for i in range(Nboids):
 		for j in range(Nboids):
 			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*FlockAttractionWeight
@@ -47,8 +48,8 @@ def update_boids(boids):
 	for i in range(Nboids):
 		for j in range(Nboids):
 			if same_flock(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
-				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*0.125/Nboids
-				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*0.125/Nboids
+				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*FlockMatchSpeedWeight
+				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*FlockMatchSpeedWeight
 	# Move according to velocities
 	for i in range(Nboids):
 		xpositions[i]=xpositions[i]+xvelocities[i]
