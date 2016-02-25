@@ -13,8 +13,6 @@ import random
 NBoids = 50
 %number of boids
 
-#np.random.random_integers(-450.0,50.0,NBoids)
-
 boids_x=np.random.random_integers(-450.0,50.0,NBoids)
 boids_y=np.random.random_integers(300.0,600.0,NBoids)
 boid_x_velocities=np.random.random_integers(0,10.0,NBoids)
@@ -31,12 +29,14 @@ def same_flock(xpos1,ypos1,xpos2,ypos2):
 	
 def update_boids(boids):
 	xpositions,ypositions,xvelocities,yvelocities=boids
-	# Fly towards the middle
+	FlockAttractionWeight = 
 	Nboids = len(xpositions)
+	# Fly towards the middle
+	FlockAttractionWeight = 0.01/NBoids
 	for i in range(Nboids):
 		for j in range(Nboids):
-			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*0.01/Nboids
-			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*0.01/Nboids
+			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*FlockAttractionWeight
+			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*FlockAttractionWeight
 	# Fly away from nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
