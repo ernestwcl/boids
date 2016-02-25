@@ -47,6 +47,12 @@ def same_flock(xpos1,xpos2,ypos1,ypos2):
 #True if boids are close enough to be in the same flock
 	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000
 	
+def update_positions(xpos,ypos,xvel,yvel):
+	for i in range(len(xpos)):
+		xpos[i]=xpos[i]+xvel[i]
+		ypos[i]=ypos[i]+yvel[i]
+	return xpos, ypos
+	
 def update_boids(positions, velocities):
 	xpositions,ypositions = positions
 	xvelocities,yvelocities=boids = velocities
@@ -57,8 +63,8 @@ def update_boids(positions, velocities):
 	
 	for i in range(Nboids):
 		for j in range(Nboids):
-			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*0.01/NBoids#FlockAttractionWeight
-			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*0.01/NBoids#FlockAttractionWeight
+			xvelocities[i]=xvelocities[i]+(xpositions[j]-xpositions[i])*FlockAttractionWeight
+			yvelocities[i]=yvelocities[i]+(ypositions[j]-ypositions[i])*FlockAttractionWeight
 	# Fly away from nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
@@ -73,12 +79,13 @@ def update_boids(positions, velocities):
 			if same_flock(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
 			#if (xpositions[j]-xpositions[i])**2 + (ypositions[j]-ypositions[i])**2 <100:
 
-				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*0.125/NBoids#FlockMatchSpeedWeight
-				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*0.125/NBoids#FlockMatchSpeedWeight
+				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*FlockMatchSpeedWeight
+				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*FlockMatchSpeedWeight
 	# Move according to velocities
-	for i in range(Nboids):
-		xpositions[i]=xpositions[i]+xvelocities[i]
-		ypositions[i]=ypositions[i]+yvelocities[i]
+	#for i in range(Nboids):
+	#	xpositions[i]=xpositions[i]+xvelocities[i]
+	#	ypositions[i]=ypositions[i]+yvelocities[i]
+	positions = update_positions(xpositions,ypositions,xvelocities,yvelocities)
 
 		
 positions = new_flock_positions(NBoids, position_lower_limit, position_upper_limit)
@@ -91,11 +98,9 @@ scatter=axes.scatter(boids[0],boids[1])
 
 
 def animate(frame):
-   print "Before"
-   print positions[0]
+
    update_boids(positions, velocities)
-   print "After"
-   print positions[0]
+
    scatter.set_offsets(positions.transpose())
 
 
