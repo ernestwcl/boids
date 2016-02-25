@@ -1,5 +1,5 @@
 """
-A deliberately bad implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406)
+A deliberately good implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406)
 for use as an exercise on refactoring.
 """
 
@@ -13,15 +13,15 @@ import random
 NBoids = 50
 #number of boids
 
-FlockAttractionWeight = 0.01/NBoids
+#FlockAttractionWeight = 0.01/NBoids
 FlockMatchSpeedWeight = 0.125/NBoids
 #flock behaviour weights
 
-boids_x=np.random.random_integers(-450.0,50.0,NBoids)
-boids_y=np.random.random_integers(300.0,600.0,NBoids)
-boid_x_velocities=np.random.random_integers(0,10.0,NBoids)
-boid_y_velocities=np.random.random_integers(-20.0,20.0,NBoids)
-boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
+#boids_x=np.random.random_integers(-450.0,50.0,NBoids)
+#boids_y=np.random.random_integers(300.0,600.0,NBoids)
+#boid_x_velocities=np.random.random_integers(0,10.0,NBoids)
+#boid_y_velocities=np.random.random_integers(-20.0,20.0,NBoids)
+#boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 position_lower_limit = np.array([-450.0,300.0])
 position_upper_limit = np.array([50.0,600.0])
@@ -102,37 +102,25 @@ def match_speed(pos1,velo1):
 	
 def update_velocities(boidpos,boidvel):
 	#Fly toward the middle
-	#for i in range(NBoids):
-	#	for j in range(NBoids):
-	#		xvel[i]=xvel[i]+(xpos[j]-xpos[i])*FlockAttractionWeight
-	#		yvel[i]=yvel[i]+(ypos[j]-ypos[i])*FlockAttractionWeight
-
 	boidvel = fly_to_middle(boidpos,boidvel)
 
 	# Fly away from nearby boids
-	#for i in range(NBoids):
-	#	for j in range(NBoids):
-	#		if too_close(xpos[j],xpos[i],ypos[j],ypos[i]):
-#
-#				xvel[i]=xvel[i]+(xpos[i]-xpos[j])
-#				yvel[i]=yvel[i]+(ypos[i]-ypos[j])
-	
 	boidvel = avoid_collisions(boidpos,boidvel)
 	
-	#xpos,ypos = boidpos
-	#xvel,yvel = boidvel
+	xpos,ypos = boidpos
+	xvel,yvel = boidvel
 	# Try to match speed with nearby boids
-	#for i in range(NBoids):
-	#	for j in range(NBoids):
-	#		if same_flock(xpos[j],xpos[i],ypos[j],ypos[i]):
+	for i in range(NBoids):
+		for j in range(NBoids):
+			if same_flock(xpos[j],xpos[i],ypos[j],ypos[i]):
 
 
-	#			xvel[i]=xvel[i]+(xvel[j]-xvel[i])*FlockMatchSpeedWeight
-	#			yvel[i]=yvel[i]+(yvel[j]-yvel[i])*FlockMatchSpeedWeight
-	boidvel = match_speed(boidpos,boidvel)
+				xvel[i]=xvel[i]+(xvel[j]-xvel[i])*FlockMatchSpeedWeight
+				yvel[i]=yvel[i]+(yvel[j]-yvel[i])*FlockMatchSpeedWeight
+	#boidvel = match_speed(boidpos,boidvel)
 	
 	
-	return boidvel
+	return xvel,yvel
 
 def update_boids(positions, velocities):
 	xpositions,ypositions = positions
@@ -148,7 +136,7 @@ velocities = new_flock_velocities(NBoids, velocity_lower_limit, velocity_upper_l
 
 figure=plt.figure()
 axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
-scatter=axes.scatter(boids[0],boids[1])
+scatter=axes.scatter(positions[0],positions[1])
 
 
 
