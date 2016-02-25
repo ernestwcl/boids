@@ -11,7 +11,7 @@ import random
 # Deliberately terrible code for teaching purposes
 
 NBoids = 50
-%number of boids
+#number of boids
 
 boids_x=np.random.random_integers(-450.0,50.0,NBoids)
 boids_y=np.random.random_integers(300.0,600.0,NBoids)
@@ -25,7 +25,7 @@ def too_close(xpos1,ypos1,xpos2,ypos2):
 	
 def same_flock(xpos1,ypos1,xpos2,ypos2):
 #True if boids are close enough to be in the same flock
-	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000)
+	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000
 	
 def update_boids(boids):
 	xpositions,ypositions,xvelocities,yvelocities=boids
@@ -42,12 +42,14 @@ def update_boids(boids):
 	for i in range(Nboids):
 		for j in range(Nboids):
 			if too_close(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
+				print "hi"
 				xvelocities[i]=xvelocities[i]+(xpositions[i]-xpositions[j])
 				yvelocities[i]=yvelocities[i]+(ypositions[i]-ypositions[j])
 	# Try to match speed with nearby boids
 	for i in range(Nboids):
 		for j in range(Nboids):
 			if same_flock(xpositions[j],xpositions[i],ypositions[j],ypositions[i]):
+				print "hello"
 				xvelocities[i]=xvelocities[i]+(xvelocities[j]-xvelocities[i])*FlockMatchSpeedWeight
 				yvelocities[i]=yvelocities[i]+(yvelocities[j]-yvelocities[i])*FlockMatchSpeedWeight
 	# Move according to velocities
