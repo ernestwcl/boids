@@ -20,6 +20,7 @@ class BoidFlock(object):
 		self.position = self.new_flock_positions()
 		self.velocity = self.new_flock_velocities()
 		
+
 	def new_flock_positions(self):
 		NBoids = 50
 		upper_limits = self.uplim
@@ -27,7 +28,7 @@ class BoidFlock(object):
 		range = upper_limits - lower_limits
 		
 		boidpositions  = lower_limits[:,np.newaxis] + np.random.rand(2, NBoids)*range[:,np.newaxis]
-
+		
 		return boidpositions
 		#self.position = boidpositions
 		
@@ -53,14 +54,7 @@ class BoidFlock(object):
 	#	return (xpos1-xpos2)**2 + (ypos1-ypos2)**2 < 10000
 		
 	def update_positions(self):
-		xpos,ypos = self.position
-		xvel,yvel = self.velocity
-		
-		for i in range(len(xpos)):
-			xpos[i]=xpos[i]+xvel[i]
-			ypos[i]=ypos[i]+yvel[i]
-			
-		self.position = xpos,ypos
+		self.position = self.position + self.velocity
 		
 		
 	def fly_to_middle(self):
@@ -76,12 +70,11 @@ class BoidFlock(object):
 		self.velocity=velo1
 		
 	def avoid_collisions(self):
-	
+
 		pos1 = self.position
 		velo1 = self.velocity
-		
-		print self.position
-		
+
+
 		separations = pos1[:,np.newaxis,:] - pos1[:,:,np.newaxis]
 		squared_diff = np.power(separations,2)
 		squared_dist = np.sum(squared_diff,0)
@@ -118,7 +111,7 @@ class BoidFlock(object):
 		self.velocity=velo1
 		
 	def update_velocities(self):
-
+	
 		#Fly toward the middle
 		self.fly_to_middle()
 
@@ -138,16 +131,20 @@ class BoidFlock(object):
 		#boidvel = match_speed(boidpos,boidvel)
 		
 		
-		self.velocity = xvel,yvel
+		self.velocity[0] = xvel
+		self.velocity[1] = yvel
+
 
 	def update_boids(self):
 
-		velocities = self.update_velocities()
 
-		positions = self.update_positions()
+		self.update_velocities()
+
+		self.update_positions()
+
+
 		
 boid = BoidFlock()
-
 
 
 figure=plt.figure()
@@ -156,11 +153,12 @@ scatter=axes.scatter(boid.position[0],boid.position[1])
 
 
 
+
 def animate(frame):
 
    boid.update_boids()
 
-   #scatter.set_offsets(boid.position.transpose())
+   scatter.set_offsets(boid.position.transpose())
 
 
 anim = animation.FuncAnimation(figure, animate,
