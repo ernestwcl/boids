@@ -1,11 +1,11 @@
-import boids as bf
+from .. import boids as bf
 from nose.tools import assert_almost_equal
 import os
 import yaml
 import numpy as np
 
 def test_bad_boids_update_boids():
-    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixture.yml')))
+    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixtures/fixture.yml')))
     boid_data=regression_data["before"]
    
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
@@ -22,7 +22,7 @@ def test_bad_boids_update_boids():
             assert_almost_equal(after_value,before_value,delta=0.01)
 	
 def test_bad_boids_fly_middle():
-    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixture_fly_middle.yml')))
+    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixtures/fixture_fly_middle.yml')))
     boid_data=regression_data["before"]
    
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
@@ -40,7 +40,7 @@ def test_bad_boids_fly_middle():
             assert_almost_equal(after_value,before_value,delta=0.01)
 			
 def test_bad_boids_avoid_collisions():
-    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixture_avoid_collision.yml')))
+    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixtures/fixture_avoid_collision.yml')))
     boid_data=regression_data["before"]
    
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
@@ -58,7 +58,7 @@ def test_bad_boids_avoid_collisions():
             assert_almost_equal(after_value,before_value,delta=0.01)
 			
 def test_bad_boids_match_speed():
-    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixture_match_speed.yml')))
+    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixtures/fixture_match_speed.yml')))
     boid_data=regression_data["before"]
    
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
@@ -76,7 +76,7 @@ def test_bad_boids_match_speed():
             assert_almost_equal(after_value,before_value,delta=0.01)
             
 def test_bad_boids_update_velocities():
-    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixture_update_velocities.yml')))
+    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixtures/fixture_update_velocities.yml')))
     boid_data=regression_data["before"]
    
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
@@ -94,7 +94,7 @@ def test_bad_boids_update_velocities():
             assert_almost_equal(after_value,before_value,delta=0.01)
 			
 def test_bad_boids_update_positions():
-    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixture_update_positions.yml')))
+    regression_data=yaml.load(open(os.path.join(os.path.dirname(__file__),'fixtures/fixture_update_positions.yml')))
     boid_data=regression_data["before"]
    
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
