@@ -101,8 +101,25 @@ class BoidFlock(object):
 		
 		self.velocity=velo1
 	
+	def match_speed(self):
+
+		xpos,ypos = self.position
+		xvel,yvel = self.velocity
+		# Try to match speed with nearby boids
+		for i in range(len(xpos)):
+			for j in range(len(xpos)):
+				if (xpos[j]-xpos[i])**2 + (ypos[j]-ypos[i])**2 < 10000:
+
+
+					xvel[i]=xvel[i]+(xvel[j]-xvel[i])*0.125/50
+					yvel[i]=yvel[i]+(yvel[j]-yvel[i])*0.125/50
+
 		
-	def match_speed(pos1,velo1):
+		
+		self.velocity[0] = xvel
+		self.velocity[1] = yvel
+		
+	def match_speed_modified(self):
 
 		pos1 = self.position
 		velo1 = self.velocity
@@ -130,21 +147,11 @@ class BoidFlock(object):
 		# Fly away from nearby boids
 		self.avoid_collisions()
 		
-		xpos,ypos = self.position
-		xvel,yvel = self.velocity
-		# Try to match speed with nearby boids
-		for i in range(len(xpos)):
-			for j in range(len(xpos)):
-				if (xpos[j]-xpos[i])**2 + (ypos[j]-ypos[i])**2 < 10000:
-
-
-					xvel[i]=xvel[i]+(xvel[j]-xvel[i])*0.125/50
-					yvel[i]=yvel[i]+(yvel[j]-yvel[i])*0.125/50
-
+		# Match speed with flock
+		self.match_speed()
 		
-		
-		self.velocity[0] = xvel
-		self.velocity[1] = yvel
+
+
 
 
 	def update_boids(self):
