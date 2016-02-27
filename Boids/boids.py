@@ -119,7 +119,8 @@ class BoidFlock(object):
 		self.velocity[1] = yvel
 		
 	def match_speed_modified(self):
-
+		#Different function that reduces loop iteration for speed matching.
+		#However this is a distinct algorithm
 		pos1 = self.position
 		velo1 = self.velocity
 	
