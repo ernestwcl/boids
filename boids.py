@@ -10,20 +10,28 @@ class BoidFlock(object):
 
 		
 
-	def __init__(self, config): 
+	def __init__(self, config = 0): 
 
 		#self.number = 50
 		#self.lowlim = lowerposlimit = np.array([-450.0,300.0])
 		#self.uplim = upperposlimit = np.array([50.0,600.0])
 		#self.lowvlim = lowervellimit = np.array([0,-20.0])
 		#self.upvlim = uppervellimit = np.array([10.0,20.0])
+		if config == 0:
 		
-		self.config = yaml.load(open(config))
-		self.number = self.config['NUMBER_OF_BOIDS']
-		self.lowlim  = np.array(self.config['LOWER_POS_LIM'])
-		self.uplim = np.array(self.config['UPPER_POS_LIM'])
-		self.lowvlim = np.array(self.config['LOWER_VEL_LIM'])
-		self.upvlim = np.array(self.config['UPPER_VEL_LIM'])
+			self.number = 50
+			self.lowlim = lowerposlimit = np.array([-450.0,300.0])
+			self.uplim = upperposlimit = np.array([50.0,600.0])
+			self.lowvlim = lowervellimit = np.array([0,-20.0])
+			self.upvlim = uppervellimit = np.array([10.0,20.0])
+		
+		else:
+			self.config = yaml.load(open(config))
+			self.number = self.config['NUMBER_OF_BOIDS']
+			self.lowlim  = np.array(self.config['LOWER_POS_LIM'])
+			self.uplim = np.array(self.config['UPPER_POS_LIM'])
+			self.lowvlim = np.array(self.config['LOWER_VEL_LIM'])
+			self.upvlim = np.array(self.config['UPPER_VEL_LIM'])
 
 		self.position = self.new_flock_positions()
 		self.velocity = self.new_flock_velocities()
@@ -50,6 +58,12 @@ class BoidFlock(object):
 
 		return boidvelocities
 		#self.velocity = boidvelocities
+		
+	def set_position(self,position):
+		self.position = position
+		
+	def set_velocity(self,velocity):
+		self.velocity = velocity
 
 		
 	def update_positions(self):
