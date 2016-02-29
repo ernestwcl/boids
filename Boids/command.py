@@ -30,11 +30,10 @@ def process():
         # Function handle for animate
         funcEval = lambda x: animate(boid, scatter)
         # Animate
-		
         anim = animation.FuncAnimation(figure, funcEval, frames=50, interval=50)
         plt.show()
     except IOError:
-        print "The file you provided does not exist.\n" 
+        print "The file does not exist.\n" 
         parser.print_help()
     except:
         print "Unexpected error.\n"

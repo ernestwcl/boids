@@ -159,37 +159,7 @@ class BoidFlock(object):
 
 		self.update_velocities()
 
-
-		print repr(self.position[0])
-		print repr(self.position[1])
-		print repr(self.velocity[0])
-		print repr(self.velocity[1])
 		self.update_positions()
-		print repr(self.position[0])
-		print repr(self.position[1])
-		print repr(self.velocity[0])
-		print repr(self.velocity[1])
 
 		
-# boid = BoidFlock("config.yml")
 
-
-# figure=plt.figure()
-# axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
-# scatter=axes.scatter(boid.position[0],boid.position[1])
-
-
-
-
-# def animate(frame):
-
-   # boid.update_boids()
-
-   # scatter.set_offsets(boid.position.transpose())
-
-
-# anim = animation.FuncAnimation(figure, animate,
-                               # frames=50, interval=50)
-
-# if __name__ == "__main__":
-    # plt.show()
